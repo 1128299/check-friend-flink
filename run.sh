@@ -2,9 +2,10 @@
 set -euo pipefail
 
 # ===================== 配置项（用户仅需修改这里！） =====================
-# 请让用户修改以下2个参数，其余无需动
-WEB_ROOT="/www/wwwroot/你的域名"  # 替换为你的网站根目录（必填！）
-REMOTE_JSON_URL="https://www.liublog.cn/flink_count.json"  # 替换为你的友链数据源（必填！）
+# 替换为你的网站根目录（例如：/www/wwwroot/link.liublog.cn）
+WEB_ROOT="/www/wwwroot/你的域名"
+# 替换为你的友链数据源JSON地址
+REMOTE_JSON_URL="https://www.liublog.cn/flink_count.json"
 
 # ===================== 颜色定义 =====================
 GREEN='\033[0;32m'
@@ -20,7 +21,7 @@ print_color() {
     echo -e "${color}${text}${NC}"
 }
 
-# 检查是否为root用户
+# 检查是否为root用户（重启服务必须root）
 check_root() {
     if [ "$(id -u)" -ne 0 ]; then
         print_color "$RED" "❌ 请使用root用户运行此脚本（执行：sudo -i 切换root）"
@@ -28,31 +29,33 @@ check_root() {
     fi
 }
 
-# 检查Python3是否安装
+# 检查并自动安装Python3.11+
 check_python() {
     print_color "$BLUE" "\n🔍 检查Python3环境..."
     if ! command -v python3 &> /dev/null; then
         print_color "$YELLOW" "⚠️  未找到Python3，开始自动安装Python3.11..."
         if command -v yum &> /dev/null; then
-            yum install -y python311 python311-pip
+            yum install -y epel-release > /dev/null 2>&1
+            yum install -y python311 python311-pip > /dev/null 2>&1
         elif command -v apt &> /dev/null; then
-            apt update && apt install -y python3.11 python3.11-venv python3.11-pip
+            apt update > /dev/null 2>&1
+            apt install -y python3.11 python3.11-venv python3.11-pip > /dev/null 2>&1
         else
             print_color "$RED" "❌ 不支持的系统，需手动安装Python3.11+"
             exit 1
         fi
-        ln -sf /usr/bin/python3.11 /usr/bin/python3
-        ln -sf /usr/bin/pip3.11 /usr/bin/pip3
+        ln -sf /usr/bin/python3.11 /usr/bin/python3 > /dev/null 2>&1
+        ln -sf /usr/bin/pip3.11 /usr/bin/pip3 > /dev/null 2>&1
     fi
     print_color "$GREEN" "✅ Python3环境检测完成：$(python3 --version)"
 }
 
-# 创建Python虚拟环境
+# 创建Python虚拟环境（隔离系统环境）
 create_venv() {
     print_color "$BLUE" "\n🔧 创建Python虚拟环境..."
     VENV_DIR="${WEB_ROOT}/venv"
     if [ ! -d "$VENV_DIR" ]; then
-        python3 -m venv "$VENV_DIR"
+        python3 -m venv "$VENV_DIR" > /dev/null 2>&1
         print_color "$GREEN" "✅ 虚拟环境创建成功：${VENV_DIR}"
     else
         print_color "$YELLOW" "⚠️  虚拟环境已存在，跳过创建"
@@ -62,19 +65,19 @@ create_venv() {
     print_color "$GREEN" "✅ 虚拟环境已激活"
 }
 
-# 安装依赖
+# 安装项目依赖
 install_deps() {
     print_color "$BLUE" "\n📦 安装项目依赖..."
-    cd "$WEB_ROOT"
+    cd "$WEB_ROOT" || exit 1
     if [ ! -f "requirements.txt" ]; then
         print_color "$RED" "❌ 未找到requirements.txt，请确认文件已上传到根目录"
         exit 1
     fi
-    pip3 install -r requirements.txt --upgrade
+    pip3 install -r requirements.txt --upgrade > /dev/null 2>&1
     print_color "$GREEN" "✅ 依赖安装完成"
 }
 
-# 生成.env配置文件
+# 生成.env核心配置文件
 create_env() {
     print_color "$BLUE" "\n⚙️  生成.env配置文件..."
     ENV_FILE="${WEB_ROOT}/.env"
@@ -99,48 +102,85 @@ EOF
     fi
 }
 
-# 生成nginx.htaccess安全配置
+# 生成增强版nginx.htaccess安全配置（保留+强化安全）
 create_nginx_config() {
-    print_color "$BLUE" "\n🛡️  生成Nginx安全配置文件..."
+    print_color "$BLUE" "\n🛡️  生成增强版Nginx安全配置文件..."
     NGINX_FILE="${WEB_ROOT}/nginx.htaccess"
     if [ ! -f "$NGINX_FILE" ]; then
         cat > "$NGINX_FILE" << EOF
-# 禁止访问.github目录
-location /\.github/ {
+# ===================== 基础安全防护 =====================
+# 1. 禁止访问隐藏目录/文件（.开头的敏感文件）
+location ~ /\\.(github|env|env.example|gitignore|htaccess|htpasswd|svn|git|DS_Store) {
     deny all;
     return 404;
 }
 
-# 禁止访问敏感文件
-location ~ /(\.env|\.env.example|main.py|requirements.txt|run.sh|run_local.sh|task_run.log|.gitignore) {
+# 2. 禁止访问核心代码/配置文件（即使文件不存在也不暴露）
+location ~ /(main\\.py|requirements\\.txt|run\\.sh|task_run\\.log|venv/) {
     deny all;
     return 404;
 }
 
-# 禁止访问日志目录
+# 3. 禁止访问日志目录
 location /logs/ {
     deny all;
     return 404;
 }
 
-# 仅允许访问result.json
-location /result.json {
+# ===================== 增强安全防护 =====================
+# 4. 仅允许访问 result.json（核心对外文件）
+location = /result.json {
     allow all;
+    # 开启gzip压缩，提升访问速度
+    gzip on;
+    gzip_types application/json;
+    # 设置缓存，减轻服务器压力（10分钟）
+    expires 10m;
 }
+
+# 5. 禁止非法HTTP请求方法（仅允许GET/HEAD/POST）
+if (\$request_method !~ ^(GET|HEAD|POST)\$) {
+    return 403;
+}
+
+# 6. 限制单IP请求频率（防爬虫/攻击，每秒最多10次请求）
+limit_req_zone \$binary_remote_addr zone=json_limit:10m rate=10r/s;
+location ~ \\.json\$ {
+    limit_req zone=json_limit burst=20 nodelay;
+}
+
+# 7. 隐藏Nginx版本信息（避免版本漏洞被利用）
+server_tokens off;
+
+# 8. 防XSS攻击：添加响应头
+add_header X-Content-Type-Options nosniff;
+add_header X-XSS-Protection "1; mode=block";
+add_header X-Frame-Options SAMEORIGIN;
+
+# 9. 禁止直接访问目录（避免遍历文件）
+autoindex off;
+
+# 10. 仅允许指定MIME类型（防止恶意文件解析）
+types {
+    application/json json;
+    text/plain txt;
+    text/html html;
+}
+default_type application/octet-stream;
 EOF
-        print_color "$GREEN" "✅ nginx.htaccess安全配置生成成功"
+        print_color "$GREEN" "✅ 增强版nginx.htaccess安全配置生成成功"
     else
-        print_color "$YELLOW" "⚠️  nginx.htaccess已存在，跳过生成"
+        print_color "$YELLOW" "⚠️  nginx.htaccess已存在，跳过生成（如需增强安全请手动替换）"
     fi
 }
 
-# 配置定时任务
+# 配置定时任务（每2小时自动检测友链）
 create_crontab() {
     print_color "$BLUE" "\n⏰ 配置定时任务（每2小时运行一次）..."
     CRON_JOB="0 */2 * * * cd ${WEB_ROOT} && ${WEB_ROOT}/venv/bin/python3 main.py >> ${WEB_ROOT}/task_run.log 2>&1 && chmod 644 ${WEB_ROOT}/result.json"
     
     # 检查是否已存在相同定时任务
-    if crontab -l | grep -q "${WEB_ROOT}/main.py"; then
+    if crontab -l 2>/dev/null | grep -q "${WEB_ROOT}/main.py"; then
         print_color "$YELLOW" "⚠️  定时任务已存在，跳过配置"
     else
         # 添加定时任务
@@ -149,22 +189,22 @@ create_crontab() {
     fi
 }
 
-# 设置文件权限
+# 设置文件权限（删除run_local.sh相关操作，解决报错）
 set_permissions() {
     print_color "$BLUE" "\n🔑 设置文件权限..."
-    cd "$WEB_ROOT"
-    chmod +x run_local.sh || true
-    chmod 755 "$WEB_ROOT"
-    chmod 644 "$WEB_ROOT/nginx.htaccess" "$WEB_ROOT/.env" || true
+    cd "$WEB_ROOT" || exit 1
+    chmod 755 "$WEB_ROOT"                          # 目录权限
+    chmod 644 "$WEB_ROOT/nginx.htaccess" "$WEB_ROOT/.env" || true  # 配置文件权限
+    chmod 644 "$WEB_ROOT/result.json" || true      # 结果文件权限
     print_color "$GREEN" "✅ 文件权限设置完成"
 }
 
-# 测试运行脚本
+# 测试运行脚本（验证核心功能）
 test_run() {
     print_color "$BLUE" "\n🚀 测试运行友链检测脚本..."
-    cd "$WEB_ROOT"
+    cd "$WEB_ROOT" || exit 1
     source "${WEB_ROOT}/venv/bin/activate"
-    python3 main.py
+    python3 main.py > /dev/null 2>&1
     
     if [ -f "${WEB_ROOT}/result.json" ]; then
         print_color "$GREEN" "\n🎉 项目部署完成！"
@@ -176,7 +216,7 @@ test_run() {
     fi
 }
 
-# 新增：检测并重启Web服务器（Nginx/Apache）
+# 真实重启Web服务器（Nginx/Apache）+ 验证重启结果
 restart_web_server() {
     print_color "$BLUE" "\n====================================="
     print_color "$BLUE" "🔧 Web服务器重启配置"
@@ -191,14 +231,14 @@ restart_web_server() {
     if [ "$REPLY" = "yes" ]; then
         print_color "$BLUE" "\n🔍 检测当前运行的Web服务器..."
         
-        # 检测Nginx是否安装并运行
+        # 检测并重启Nginx（真实执行）
         if command -v nginx &> /dev/null; then
             print_color "$YELLOW" "⚠️  检测到Nginx服务器，开始重启..."
-            # 停止Nginx（兼容不同系统）
+            # 兼容不同系统的重启命令
             if command -v systemctl &> /dev/null; then
-                systemctl restart nginx
+                systemctl restart nginx > /dev/null 2>&1
             else
-                service nginx restart
+                service nginx restart > /dev/null 2>&1
             fi
             # 验证重启是否成功
             if systemctl is-active --quiet nginx; then
@@ -207,17 +247,17 @@ restart_web_server() {
                 print_color "$YELLOW" "⚠️  Nginx重启命令执行完成，请手动验证是否生效"
             fi
         
-        # 检测Apache是否安装并运行
+        # 检测并重启Apache（真实执行）
         elif command -v apache2 &> /dev/null || command -v httpd &> /dev/null; then
             print_color "$YELLOW" "⚠️  检测到Apache服务器，开始重启..."
             # 区分Ubuntu/Debian（apache2）和CentOS（httpd）
             if command -v apache2 &> /dev/null; then
                 if command -v systemctl &> /dev/null; then
-                    systemctl restart apache2
+                    systemctl restart apache2 > /dev/null 2>&1
                 else
-                    service apache2 restart
+                    service apache2 restart > /dev/null 2>&1
                 fi
-                # 验证
+                # 验证重启结果
                 if systemctl is-active --quiet apache2; then
                     print_color "$GREEN" "✅ Apache重启成功！"
                 else
@@ -225,11 +265,11 @@ restart_web_server() {
                 fi
             else
                 if command -v systemctl &> /dev/null; then
-                    systemctl restart httpd
+                    systemctl restart httpd > /dev/null 2>&1
                 else
-                    service httpd restart
+                    service httpd restart > /dev/null 2>&1
                 fi
-                # 验证
+                # 验证重启结果
                 if systemctl is-active --quiet httpd; then
                     print_color "$GREEN" "✅ Apache重启成功！"
                 else
@@ -292,7 +332,7 @@ main() {
     # 9. 测试运行
     test_run
 
-    # 10. 新增：Web服务器重启判断
+    # 10. Web服务器重启判断（真实重启）
     restart_web_server
 
     print_color "$GREEN" "\n====================================="
