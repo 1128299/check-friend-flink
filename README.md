@@ -236,15 +236,11 @@ location /result.json {
 
 ### 1. 修改检测频率
 
-- GitHub 端
-
-  ：修改 
-
+- GitHub端修改 
   ```
   check_links.yml
   ```
-
-   中的 
+中的
 
   ```
   cron
@@ -317,3 +313,4 @@ LOG_RETENTION_DAYS=7      # 日志保留天数（服务器端生效）
 1. GitHub 端：查看 Actions 运行日志定位问题；
 2. 服务器端：查看 `logs/flink_check_main.log` 日志；
 3. 提交 GitHub Issues 反馈核心问题。
+
