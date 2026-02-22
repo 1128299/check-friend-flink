@@ -1,7 +1,9 @@
 # 安知鱼主题友链自动检测工具
+
 基于 GitHub Actions 实现友链可达性自动检测，支持「远程优先、本地兜底」的双数据源降级逻辑，检测结果自动生成 `result.json` 并覆盖旧文件。
 
 ## 🚀 核心功能
+
 1. **双数据源智能降级**：
    1. 优先读取远程数据源 `https://www.liublog.cn/flink_count.json`（第一方案）；
    2. 远程访问失败时，自动切换到本地文件 `./flink_count.json`（第二方案）；
@@ -18,31 +20,27 @@ your-project/
 ├── .github/
 │   ├── workflows/
 │   │   ├── check_links.yml          # 核心检测工作流
-│   │   └── release-drafter.yml      # 自动发布说明
-│   └── release-drafter.yml          # 发布说明配置
 ├── logs/                            # 日志目录（自动生成）
-├── data/                            # 数据目录（容器化持久化）
 ├── .env.example                     # 示例环境配置
 ├── .gitignore                       # 忽略文件
 ├── requirements.txt                 # 依赖清单
-├── Dockerfile                       # 镜像构建
-├── docker-compose.yml               # 容器编排
-├── start.sh                         # 启动/安装脚本
-├── stop.sh                          # 停止/清理脚本
-├── restart.sh                       # 重启脚本
-├── monitor.sh                       # 监控告警脚本
+├── run.sh                         # 启动/安装脚本
 └── main.py                          # 核心检测代码
 
 
 ## 🔧 快速部署步骤
+
 ### 步骤 1：准备仓库文件
+
 将以下文件上传到你的 GitHub 仓库根目录：
+
 1. `check_links.yml`（放入 `.github/workflows/` 目录）；
 2. `main.py`；
 3. `flink_count.json`（本地兜底配置，格式见下文）；
 4. 本 `README.md`。
 
 ### 步骤 2：配置 GitHub 权限（必做）
+
 1. 进入你的 GitHub 仓库 → 点击顶部 `Settings`（设置）；
 2. 左侧菜单栏选择 `Actions` → `General`（通用）；
 3. 找到「Workflow permissions」（工作流权限）区域：
@@ -51,7 +49,9 @@ your-project/
 4. 点击「Save」保存设置。
 
 ### 步骤 3：配置本地兜底文件
+
 仓库根目录的 `flink_count.json` 需符合安知鱼主题标准格式，示例如下：
+
 ```json
 {
   "link_list": [
