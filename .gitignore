@@ -1,0 +1,30 @@
+# 本地环境配置（敏感信息，不上传GitHub）
+.env
+.env.local
+
+# 日志文件（GitHub Actions会上传，本地无需提交）
+logs/
+*.log
+
+# Python缓存文件（避免冗余）
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 检测结果文件（GitHub Actions自动推送，本地无需重复提交）
+result.json
+flink_count.json
+
+# 服务器临时文件
+nohup.out
+*.pid
+
+# IDE配置文件（个人配置，不上传）
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Shell脚本临时文件
+*.bak
