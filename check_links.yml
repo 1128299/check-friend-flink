@@ -1,0 +1,94 @@
+name: Check Friend Links
+
+# 触发规则：每2小时运行一次 + 手动触发（0 */2 * * * 表示每2小时的0分执行）
+on:
+  schedule:
+    - cron: '0 */2 * * *'  # 核心修改：每2小时检测一次（覆盖原每天9点）
+  workflow_dispatch:       # 保留手动触发功能，便于紧急检测
+
+# 全局环境变量配置（兼容.env.example，确保参数统一）
+env:
+  TZ: Asia/Shanghai                  # 时区设置为北京时间，避免时间偏差
+  PYTHONIOENCODING: utf-8            # 解决中文日志/结果乱码问题
+  REMOTE_JSON_URL: ${{ vars.REMOTE_JSON_URL || 'https://www.liublog.cn/flink_count.json' }}
+  CHECK_TIMEOUT: ${{ vars.CHECK_TIMEOUT || 10 }}
+  MAX_WORKERS: ${{ vars.MAX_WORKERS || 3 }}
+  RETRY_TIMES: ${{ vars.RETRY_TIMES || 1 }}
+
+# 并发控制：避免同一时间重复运行检测任务
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  check-and-update:
+    runs-on: ubuntu-latest           # 使用GitHub官方稳定的Ubuntu镜像
+    permissions:
+      contents: write                # 必须授予写权限，用于推送result.json到仓库
+    
+    steps:
+      # 步骤1：拉取仓库最新代码
+      - name: 拉取仓库代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1             # 仅拉取最新代码，加速执行
+    
+      # 步骤2：配置Python环境（稳定版本3.11）
+      - name: 配置Python环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'               # 缓存pip依赖，减少重复安装时间
+    
+      # 步骤3：安装核心Python依赖
+      - name: 安装核心依赖
+        run: |
+          pip install --upgrade pip
+          pip install requests==2.32.3 python-dotenv==1.0.1
+          # 验证依赖安装成功，便于排查问题
+          pip list | grep -E "requests|python-dotenv"
+    
+      # 步骤4：复制示例配置为运行配置（GitHub运行时使用）
+      - name: 复制.env.example为.env
+        run: |
+          if [ -f ".env.example" ]; then
+              cp .env.example .env
+              echo "✅ 已复制示例配置为运行配置"
+          fi
+    
+      # 步骤5：创建日志目录（避免main.py执行时因目录不存在报错）
+      - name: 创建日志目录
+        run: mkdir -p logs
+    
+      # 步骤6：执行友链检测核心脚本
+      - name: 执行友链检测脚本
+        run: python main.py
+        continue-on-error: false     # 检测失败则终止流程，便于及时发现问题
+    
+      # 步骤7：推送检测结果到GitHub仓库
+      - name: 推送检测结果到仓库
+        run: |
+          # 配置Git用户信息（GitHub Actions专用）
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          
+          # 检查result.json是否生成
+          if [ -f "./result.json" ]; then
+              git add -f result.json
+              # 提交结果（无新提交时自动修正）
+              git commit -m "🤖 自动更新友链检测结果: $(date +'%Y-%m-%d %H:%M:%S')" || git commit --amend --no-edit
+              # 强制推送（确保覆盖旧结果）
+              git push -f origin main
+              echo "✅ result.json已成功推送至仓库"
+          else
+              echo "❌ 未生成result.json，推送失败"
+              exit 1
+          fi
+          
+      # 步骤8：上传日志文件（便于排查检测失败问题）
+      - name: 上传检测日志
+        uses: actions/upload-artifact@v4
+        with:
+          name: flink-check-logs
+          path: logs/
+          retention-days: 7          # 日志保留7天，足够排查问题
