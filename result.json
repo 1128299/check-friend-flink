@@ -1,63 +1,63 @@
 {
-    "timestamp": "2026-02-24 16:32:32",
-    "accessible_count": 37,
-    "inaccessible_count": 2,
+    "timestamp": "2026-02-24 18:42:53",
+    "accessible_count": 24,
+    "inaccessible_count": 15,
     "total_count": 39,
     "link_status": [
         {
             "name": "Hexo",
             "link": "https://hexo.io/zh-tw/",
-            "latency": 0.02
+            "latency": 0.1
         },
         {
             "name": "anzhiyu主题",
             "link": "https://hexo.anheyu.com/",
-            "latency": 0.42
+            "latency": -1
         },
         {
             "name": "JerryC",
             "link": "https://hexo.anheyu.com/",
-            "latency": 0.42
+            "latency": -1
         },
         {
             "name": "张洪Heo",
             "link": "https://blog.zhheo.com/",
-            "latency": 0.28
+            "latency": -1
         },
         {
             "name": "安知鱼",
             "link": "https://hexo.anheyu.com/",
-            "latency": 0.13
+            "latency": -1
         },
         {
             "name": "青桔气球",
             "link": "https://blog.qjqq.cn/",
-            "latency": 1.75
+            "latency": 1.91
         },
         {
             "name": "老刘博客",
             "link": "https://www.liublog.cn/",
-            "latency": 1.74
+            "latency": 1.77
         },
         {
             "name": "找故事",
             "link": "https://www.zhaogushi.cn/",
-            "latency": 2.29
+            "latency": 1.53
         },
         {
             "name": "李洋博客",
             "link": "https://www.itlaoli.com/",
-            "latency": 3.5
+            "latency": -1
         },
         {
             "name": "清羽飞扬",
             "link": "https://blog.liushen.fun/",
-            "latency": 0.31
+            "latency": 0.58
         },
         {
             "name": "新锐博客",
             "link": "https://www.xrbk.cn/",
-            "latency": 1.19
+            "latency": -1
         },
         {
             "name": "徐舒白",
@@ -67,22 +67,22 @@
         {
             "name": "葱苓小筑",
             "link": "https://blog.ciraos.top",
-            "latency": 2.38
+            "latency": -1
         },
         {
             "name": "Leonus",
             "link": "https://blog.leonus.cn/",
-            "latency": 2.54
+            "latency": 2.17
         },
         {
             "name": "宇外御风的hexo博客",
             "link": "https://www.20010501.xyz/",
-            "latency": 4.94
+            "latency": 5.35
         },
         {
             "name": "梦爱吃鱼",
             "link": "https://blog.bsgun.cn/",
-            "latency": 0.77
+            "latency": -1
         },
         {
             "name": "❖星港◎Star☆",
@@ -92,57 +92,57 @@
         {
             "name": "半方池水半方田",
             "link": "https://blog.uuanqin.top/",
-            "latency": 1.88
+            "latency": 1.73
         },
         {
             "name": "小植同学",
             "link": "https://blog.xiaoztx.top",
-            "latency": 1.0
+            "latency": -1
         },
         {
             "name": "BiuXin 与光｜生活分享",
             "link": "https://blog.biuxin.com",
-            "latency": 0.94
+            "latency": 0.93
         },
         {
             "name": "王权富贵",
             "link": "https://blog.w1f.top/",
-            "latency": 0.74
+            "latency": -1
         },
         {
             "name": "卖桃翁小窝",
             "link": "https://ayakasuki.com",
-            "latency": 2.17
+            "latency": -1
         },
         {
             "name": "前尘小筑",
             "link": "https://mnchen.cn/",
-            "latency": 0.81
+            "latency": -1
         },
         {
             "name": "一清三白",
             "link": "https://sanbaiblog.cn/",
-            "latency": 0.64
+            "latency": 0.63
         },
         {
             "name": "青萍叙事",
             "link": "https://blog.lusyoe.com",
-            "latency": 2.81
+            "latency": 2.61
         },
         {
             "name": "张时贰",
             "link": "https://zhsher.cn",
-            "latency": 0.35
+            "latency": 0.38
         },
         {
             "name": "山岳库博",
             "link": "https://kmar.top/",
-            "latency": 0.51
+            "latency": 0.8
         },
         {
             "name": "轻笑Chuckle",
             "link": "https://www.qcqx.cn",
-            "latency": 0.97
+            "latency": 1.09
         },
         {
             "name": "陶小桃Blog",
@@ -157,47 +157,47 @@
         {
             "name": "探人间",
             "link": "https://www.hydsb0.com/",
-            "latency": 0.5
+            "latency": 0.27
         },
         {
             "name": "唐志远",
             "link": "https://fe32.top/",
-            "latency": 1.3
+            "latency": 1.25
         },
         {
             "name": "南方嘉木",
             "link": "https://blog.cancin.cn/",
-            "latency": 0.68
+            "latency": 0.41
         },
         {
             "name": "yiiko",
             "link": "https://blog.yik.at/",
-            "latency": 0.22
+            "latency": 0.27
         },
         {
             "name": "Mo的记事簿",
             "link": "https://blog.xiowo.net/",
-            "latency": 1.17
+            "latency": 1.16
         },
         {
             "name": "Evilrabbit Blog",
             "link": "https://blog.yujiay.wang/",
-            "latency": 1.6
+            "latency": -1
         },
         {
             "name": "Lucas的小博客",
             "link": "https://blog.lris625.top/",
-            "latency": 1.29
+            "latency": 1.05
         },
         {
             "name": "琅環书生",
             "link": "https://blog.chn.us.kg",
-            "latency": 0.15
+            "latency": 0.25
         },
         {
             "name": "Feng的小屋",
             "link": "https://bkfeng.vvvv.ee",
-            "latency": 1.37
+            "latency": 0.96
         }
     ]
 }
