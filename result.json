@@ -1,88 +1,88 @@
 {
-    "timestamp": "2026-03-04 18:24:12",
-    "accessible_count": 35,
-    "inaccessible_count": 4,
+    "timestamp": "2026-03-04 20:28:58",
+    "accessible_count": 36,
+    "inaccessible_count": 3,
     "total_count": 39,
     "link_status": [
         {
             "name": "Hexo",
             "link": "https://hexo.io/zh-tw/",
-            "latency": 0.27
+            "latency": 0.5
         },
         {
             "name": "anzhiyu主题",
             "link": "https://hexo.anheyu.com/",
-            "latency": 0.53
+            "latency": 0.29
         },
         {
             "name": "JerryC",
             "link": "https://hexo.anheyu.com/",
-            "latency": 0.53
+            "latency": 0.29
         },
         {
             "name": "张洪Heo",
             "link": "https://blog.zhheo.com/",
-            "latency": 0.3
+            "latency": 0.33
         },
         {
             "name": "安知鱼",
             "link": "https://hexo.anheyu.com/",
-            "latency": 0.1
+            "latency": 0.15
         },
         {
             "name": "青桔气球",
             "link": "https://blog.qjqq.cn/",
-            "latency": -1
+            "latency": 2.12
         },
         {
             "name": "老刘博客",
             "link": "https://www.liublog.cn/",
-            "latency": 1.68
+            "latency": 1.23
         },
         {
             "name": "找故事",
             "link": "https://www.zhaogushi.cn/",
-            "latency": 1.66
+            "latency": 1.64
         },
         {
             "name": "李洋博客",
             "link": "https://www.itlaoli.com/",
-            "latency": 8.52
+            "latency": 3.12
         },
         {
             "name": "清羽飞扬",
             "link": "https://blog.liushen.fun/",
-            "latency": 0.31
+            "latency": 0.26
         },
         {
             "name": "新锐博客",
             "link": "https://www.xrbk.cn/",
-            "latency": 1.03
+            "latency": 0.67
         },
         {
             "name": "徐舒白",
             "link": "https://blog.wsxsb.com/",
-            "latency": 0.89
+            "latency": 0.71
         },
         {
             "name": "葱苓小筑",
             "link": "https://blog.ciraos.top",
-            "latency": 6.6
+            "latency": 2.69
         },
         {
             "name": "Leonus",
             "link": "https://blog.leonus.cn/",
-            "latency": 1.33
+            "latency": 1.17
         },
         {
             "name": "宇外御风的hexo博客",
             "link": "https://www.20010501.xyz/",
-            "latency": 1.63
+            "latency": 5.45
         },
         {
             "name": "梦爱吃鱼",
             "link": "https://blog.bsgun.cn/",
-            "latency": 0.37
+            "latency": 0.44
         },
         {
             "name": "❖星港◎Star☆",
@@ -92,57 +92,57 @@
         {
             "name": "半方池水半方田",
             "link": "https://blog.uuanqin.top/",
-            "latency": 1.57
+            "latency": 2.02
         },
         {
             "name": "小植同学",
             "link": "https://blog.xiaoztx.top",
-            "latency": 1.28
+            "latency": 3.21
         },
         {
             "name": "BiuXin 与光｜生活分享",
             "link": "https://blog.biuxin.com",
-            "latency": 0.95
+            "latency": 0.73
         },
         {
             "name": "王权富贵",
             "link": "https://blog.w1f.top/",
-            "latency": 0.85
+            "latency": 0.92
         },
         {
             "name": "卖桃翁小窝",
             "link": "https://ayakasuki.com",
-            "latency": 5.16
+            "latency": 1.31
         },
         {
             "name": "前尘小筑",
             "link": "https://mnchen.cn/",
-            "latency": 0.89
+            "latency": 0.68
         },
         {
             "name": "一清三白",
             "link": "https://sanbaiblog.cn/",
-            "latency": 0.51
+            "latency": 0.42
         },
         {
             "name": "青萍叙事",
             "link": "https://blog.lusyoe.com",
-            "latency": 2.28
+            "latency": 1.97
         },
         {
             "name": "张时贰",
             "link": "https://zhsher.cn",
-            "latency": 0.59
+            "latency": 0.49
         },
         {
             "name": "山岳库博",
             "link": "https://kmar.top/",
-            "latency": 0.71
+            "latency": 1.38
         },
         {
             "name": "轻笑Chuckle",
             "link": "https://www.qcqx.cn",
-            "latency": 0.92
+            "latency": 4.67
         },
         {
             "name": "陶小桃Blog",
@@ -152,12 +152,12 @@
         {
             "name": "冰火之砺",
             "link": "https://blog.marice.top/",
-            "latency": 0.66
+            "latency": 2.2
         },
         {
             "name": "探人间",
             "link": "https://www.hydsb0.com/",
-            "latency": 0.62
+            "latency": 0.3
         },
         {
             "name": "唐志远",
@@ -167,37 +167,37 @@
         {
             "name": "南方嘉木",
             "link": "https://blog.cancin.cn/",
-            "latency": 0.62
+            "latency": 0.38
         },
         {
             "name": "yiiko",
             "link": "https://blog.yik.at/",
-            "latency": 0.71
+            "latency": 0.25
         },
         {
             "name": "Mo的记事簿",
             "link": "https://blog.xiowo.net/",
-            "latency": 0.77
+            "latency": 0.57
         },
         {
             "name": "Evilrabbit Blog",
             "link": "https://blog.yujiay.wang/",
-            "latency": 0.71
+            "latency": 1.15
         },
         {
             "name": "Lucas的小博客",
             "link": "https://blog.lris625.top/",
-            "latency": 1.0
+            "latency": 1.16
         },
         {
             "name": "琅環书生",
             "link": "https://blog.chn.us.kg",
-            "latency": 0.46
+            "latency": 0.36
         },
         {
             "name": "Feng的小屋",
             "link": "https://bkfeng.vvvv.ee",
-            "latency": 0.58
+            "latency": 0.57
         }
     ]
 }
