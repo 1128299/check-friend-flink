@@ -1,0 +1,32 @@
+# 本地配置（双端均忽略）
+.env
+.env.local
+
+# 日志文件
+logs/
+*.log
+run_task.log  # 服务器定时任务日志
+
+# Python缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 检测结果（GitHub自动推送，服务器本地保留）
+result.json
+flink_count.json
+
+# 服务器临时文件
+nohup.out
+*.pid
+
+# IDE配置
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 压缩包
+*.zip
+*.tar.gz
